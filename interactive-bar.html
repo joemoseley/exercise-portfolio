@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Exercise Portfolio</title>
+    <link href="css/style.css" rel="stylesheet" />
+    <style>
+      /* .bars {
+        fill: blue;
+      } */
+    </style>
+  </head>
+
+  <body>
+
+    <header>
+      <!-- ADD YOUR NAME -->
+      <h1>JOSEPH MOSELEY: Exercise Portfolio</h1>
+    </header>
+
+    <div id="content">
+
+      <nav>
+        <ul>
+          <li><a href="index.html">Return to Main Page</a></li>
+        </ul>
+      </nav>
+
+      <main>
+        <button class="button">Change Data</button>
+        <h2 class="title">MLB Spring Training Win Percentage</h2>
+
+        <p>This chart shows the win percentage of teams during spring traning clicking the button will change the data from the Cactus League to the Grapefruit Leage</p>
+
+        <!-- ADD YOUR VISUALIZATION HERE -->
+
+      </main>
+    </div>
+
+    <script src="js/d3.min.js"></script>
+    <script src="js/lodash.min.js"></script>
+    <script>
+
+      // add your script here
+      // OR
+      // add a link to a stand-alone script in the js folder
+
+      var margin = {
+        top: 100,
+        right: 100,
+        bottom: 100,
+        left: 100
+      };
+      var w = innerWidth-margin.left-margin.right,
+          h = innerHeight-margin.top-margin.bottom;
+
+      d3.csv("data/spring-training.csv").then(function(data) {
+      var grapefruit = _.filter(data, function(d) {
+        if (d.league == "G") {
+          return d;
+        }
+      });
+    //  console.log(grapefruit);
+      var grapefruitSorted = _.orderBy(grapefruit, ['pct', 'team'], ['desc', 'asc']);
+      console.log(grapefruitSorted);
+      var cactus = _.filter(data, function(d) {
+        if (d.league == "C") {
+          return d;
+        }
+      });
+    //  console.log(cactus);
+      var cactusSorted = _.orderBy(cactus, ['pct', 'team'], ['desc', 'asc']);
+      console.log(cactusSorted);
+
+
+      var svg = d3.select("main").append("svg");
+      svg.attr("width", w)
+         .attr("height", h);
+
+//scales
+      var xScale = d3.scaleBand()
+                     .domain(cactusSorted.map(function(d) {
+                       return d.abbr;
+                     }))
+                     .range([0,1000])
+                     .paddingInner(0.05);
+
+      var yScale = d3.scaleLinear()
+                     .domain([0, d3.max(data, function(d) { return +d.pct; })])
+                    .range([h - margin.bottom , margin.top]);
+
+//paint bars
+      svg.selectAll("rect")
+      .data(cactusSorted)
+      .enter()
+      .append("rect")
+      .attr("class", "bars")
+      .attr("fill", "green")
+      .attr("x", function(d) { return xScale(d.abbr) + margin.left; })
+      .attr("y", function(d) { return yScale(+d.pct) - margin.bottom; })
+      .attr("height", function(d) { return h- yScale(d.pct); })
+      .attr("width", xScale.bandwidth());
+
+//paint axis
+      var xAxis = d3.axisBottom()
+                    .scale(xScale);
+      var yAxis = d3.axisLeft()
+                    .scale(yScale);
+      svg.append("g")
+         .attr("class", "x-axis")
+         .attr("transform", "translate(" + margin.left + "," + (h - margin.bottom) + ")")
+         .call(xAxis);
+      svg.append("g")
+         .attr("class", "y-axis")
+         .attr("transform", "translate("+margin.left+" , 0)")
+         .call(yAxis);
+
+//onclick
+      d3.select(".button")
+        .on("click", function() {
+          console.log("Button Clicked");
+          svg.selectAll(".leagueName")
+             .text("GRAPEFRUIT LEAGUE");
+          xScale.domain(grapefruitSorted.map(function(d) {
+            return d.abbr;
+          }))
+          svg.selectAll(".bars")
+             .data(grapefruitSorted)
+             .transition()
+             .duration(1500)
+             .ease(d3.easeElasticOut)
+             .attr("fill", "pink")
+             .attr("y", function(d) { return yScale(+d.pct) - margin.bottom; })
+             .attr("height", function(d) { return h - yScale(+d.pct); })
+             .attr("width", xScale.bandwidth());
+
+        });
+
+//axis labels
+      svg.append("text")
+         .attr("text-anchor", "middle")
+         .attr("transform", "translate(500,850)")
+         .text("Team");
+      svg.append("text")
+         .attr("transform", "translate(25,500)rotate(-90)")
+         .text("Win PCT");
+      svg.append("text")
+         .attr("class", "leagueName")
+         .attr("transform", "translate(500,25)")
+         .text("CACTUS LEAGUE");
+      })
+
+    </script>
+  </body>
+</html>

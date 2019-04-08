@@ -148,7 +148,7 @@
           .attr("x", 110)
           .attr("y", yScale(mean) + margin.top - 25)
           .attr("transform", "translate(0," + (margin.top - 1) + ")")
-          .text("Mean Close Price: " + mean);
+          .text("Mean Close Price: " + mean.toPrecision(4));
 
 //axis labels
        svg.append("text")
@@ -267,7 +267,7 @@
 //highespoint label
        svg.append("text")
           .attr("class", "highLabel")
-          .text("Highest Closing Price: " + HC)
+          .text("Highest Closing Price: " + HC.toPrecision(5))
           .attr("x", 110)
           .attr("y", margin.top + 20);
         });
