@@ -31,8 +31,9 @@
       }
       .highLine {
         fill: none;
-        stroke: orange;
+        stroke: black;
         stroke-width: 2px;
+        stroke-dasharray: dotted;
       }
     </style>
   </head>
@@ -171,7 +172,7 @@
            .attr("x", 110)
            .attr("y", yScale(mean) + margin.top - 25)
            .attr("transform", "translate(0," + (margin.top - 1) + ")")
-           .text("Mean Close Price: " + mean);
+           .text("Mean Close Price: $" + mean.toPrecision(5));
 
 //obama lines
         svg.append("line")
@@ -275,7 +276,7 @@
 //highespoint label
         svg.append("text")
            .attr("class", "highLabel")
-           .text("Highest Closing Price: " + HC)
+           .text("Highest Closing Price: $" + HC.toPrecision(6))
            .attr("x", 110)
            .attr("y", margin.top + 20);
 

@@ -8,7 +8,7 @@
       .line {
         fill: none;
         stroke: red;
-        stroke-width: 5px;
+        stroke-width: 4px;
       }
       .midline {
         fill: none;
@@ -29,14 +29,14 @@
       .highLine {
         fill: none;
         stroke: blue;
-        stroke-width: 4px;
+        stroke-width: 2px;
       }
       .tooltip {
         position: absolute;
         top: 0;
         left: 0;
-        background: blue;
-        border: 2px solid black;
+        background: #ffffff;
+        border: 1px solid #000000;
         border-radius: 10px;
         display: block;
       }
@@ -66,8 +66,7 @@
         <h2>Walt Disney Company stock price over time</h2>
 
         <p>This chart shows the closing stock price of the Walt Disney Comapny.  Hovering over the line will provide a tooltip displaying the Month and Year, the High Price, and the Low Price.</p>
-        <div class="tooltip">
-        </div>
+        <div class="tooltip"></div>
         <!-- ADD YOUR VISUALIZATION HERE -->
 
       </main>
@@ -88,7 +87,7 @@
           bottom: 50,
           left: 50
         };
-        var w = 1000-margin.left-margin.right,
+        var w = innerWidth-margin.left-margin.right,
             h = 1000-margin.top-margin.bottom;
 
         var svg = d3.select("main").append("svg");
@@ -133,89 +132,70 @@
            .attr("class", "line")
            .attr("d",line)
            .on("mouseover", function(d) {
-             var tooltipX = 300;
-             var tooltipY = 300;
-             d3.select(".tooltip")
-               .style("left",tooltipX + "px")
-               .style("top",tooltipY + "px");
-
-             d3.select(".tooltop")
-               .classed("hidden", false)
-          //  console.log("mouse over");
-            svg.append("text")
-               //.attr("id", "tooltip")
-               .attr("x", tooltipX)
-               .attr("y", tooltipY)
-               .attr("text-anchor", "middle")
-               .attr("font-family", "sans-serif")
-               .attr("font-size", "11px")
-               .attr("font-weight", "bold")
-               .attr("fill", "black")
-               .text(d.date + " High Price: " +d.High + " Low Price: " +d.Low);
+             d3.select(".tooltop").classed("hidden", false)
            })
            .on("mousemove", function(d) {
              var currentX = d3.event.pageX;
              var currentY = d3.event.pageY;
              d3.select(".tooltip")
                .style("left", currentX + "px")
-               .style("top", currentY + "px");
-          //     console.log("mouse move");
+               .style("top", currentY + "px")
+               .html(d.Date + "<br/>" + "High: " + d.High + "<br/>" + "Low: " + d.Low);
+               console.log(d.High);
            })
            .on("mouseout", function(d) {
-             d3.select(".tooltip")
-               .classed("hidden", true);
-          //     console.log("mouse out");
+             d3.select(".tooltip").classed("hidden", true);
            })
 
-//test tooltip
-          svg.selectAll("rect")
-             .data(data)
-             .enter()
-             .filter(function(d) {
-               if (+d.close == 104.82) {
-                 return d;
-               }
-             })
-             .append("rect")
-             .attr("x", 300)
-             .attr("y", 300)
-             .attr("height", 50)
-             .attr("width", 50)
-             .attr("fill", "grey")
-             .on("mouseover", function(d) {
-               var tooltipX = 330;
-               var tooltipY = 330;
-               d3.select(".tooltip")
-                 .style("left",tooltipX + "px")
-                 .style("top",tooltipY + "px");
-
-               d3.select(".tooltop")
-                 .classed("hidden", false)
-             console.log("mouse over");
-              svg.append("text")
-                 .attr("id", "tooltip")
-                 .attr("x", tooltipX)
-                 .attr("y", tooltipY)
-                 .attr("text-anchor", "middle")
-                 .attr("font-family", "sans-serif")
-                 .attr("font-size", "11px")
-                 .attr("font-weight", "bold")
-                 .attr("fill", "black")
-                 .text(d.date.getFullYear() + " " + d.date.getMonth() + " High Price: " +d.High + " Low Price: " +d.Low);
-             })
-             .on("mousemove", function(d) {
-               var currentX = d3.event.pageX;
-               var currentY = d3.event.pageY;
-               d3.select("#tooltip")
-                 .style("left", currentX + "px")
-                 .style("top", currentY + "px");
-                console.log("mouse move");
-             })
-             .on("mouseout", function(d) {
-               d3.select("#tooltip")
-                 .classed("hidden", true);
-                 console.log("mouse out");
-             })
+// //test tooltip
+//           svg.selectAll("rect")
+//              .data(data)
+//              .enter()
+//              .filter(function(d) {
+//                if (+d.close == 104.82) {
+//                  return d;
+//                }
+//              })
+//              .append("rect")
+//              .attr("x", 300)
+//              .attr("y", 300)
+//              .attr("height", 50)
+//              .attr("width", 50)
+//              .attr("fill", "grey")
+//              .on("mouseover", function(d) {
+//                var tooltipX = 330;
+//                var tooltipY = 330;
+//                d3.select(".tooltip")
+//                  .style("left",tooltipX + "px")
+//                  .style("top",tooltipY + "px");
+//
+//                d3.select(".tooltop")
+//                  .classed("hidden", false)
+//              console.log("mouse over");
+//               svg.append("text")
+//                  .attr("id", "tooltip")
+//                  .attr("x", tooltipX)
+//                  .attr("y", tooltipY)
+//                  .attr("text-anchor", "middle")
+//                  .attr("font-family", "sans-serif")
+//                  .attr("font-size", "11px")
+//                  .attr("font-weight", "bold")
+//                  .attr("fill", "black")
+//                  .text(d.date.getFullYear() + " " + d.date.getMonth() + " High Price: " +d.High + " Low Price: " +d.Low);
+//              })
+//              .on("mousemove", function(d) {
+//                var currentX = d3.event.pageX;
+//                var currentY = d3.event.pageY;
+//                d3.select("#tooltip")
+//                  .style("left", currentX + "px")
+//                  .style("top", currentY + "px");
+//                 console.log("mouse move");
+//              })
+//              .on("mouseout", function(d) {
+//                d3.select("#tooltip")
+//                  .classed("hidden", true);
+//                  console.log("mouse out");
+//              })
 
 
         // svg.append("line")
@@ -248,8 +228,7 @@
           .attr("transform", "translate(40,500)rotate(-90)")
        svg.append("text")
           .text("Date")
-          .attr("transform", "translate(450, 900)");
-
+          .attr("transform", "translate("+w/2+", 900)");
 // //obama labels
 //        svg.append("text")
 //           .text("Obama Administration")
@@ -289,7 +268,7 @@
 //        var d1 = new Date("August 01, 1998 00:00:00");
 //        var d2 = new Date("June 01, 2007 00:00:00");
 //        var dthree = new Date("April, 01 2010 00:00:00")
-     var d4 = new Date("August 01, 2018 00:00:00");
+     // var d4 = new Date("August 01, 2018 00:00:00");
 //        console.log(d1);
 // //draw points
 //        svg.append("circle")
@@ -358,22 +337,22 @@
 //highespoint label
        svg.append("text")
           .attr("class", "highLabel")
-          .text("Highest Closing Price: " + HC)
+          .text("Highest Closing Price: $" + HC)
           .attr("x", 110)
           .attr("y", margin.top + 20);
 
-//highestpoint point
-        svg.selectAll("circle")
-           .data(data)
-           .enter()
-           .filter(function(d) {
-             if (d.close == HC )
-             return d.close;
-           })
-           .append("circle")
-           .attr("class", "dataPoint")
-           .attr("cx", xScale(120))
-           .attr("cy", yScale(120));
+// //highestpoint point
+//         svg.selectAll("circle")
+//            .data(data)
+//            .enter()
+//            .filter(function(d) {
+//              if (d.close == HC )
+//              return d.close;
+//            })
+//            .append("circle")
+//            .attr("class", "dataPoint")
+//            .attr("cx", xScale(120))
+//            .attr("cy", yScale(120));
 
 
         });
